@@ -66,30 +66,35 @@ def check_player_info(target_id, requested_region=None):
 
         try:
             res = requests.post(
-                'https://shop2game.com/api/auth/player_id_login', 
-                cookies=cookies, 
-                headers=headers, 
+                'https://shop2game.com/api/auth/player_id_login',
+                cookies=cookies,
+                headers=headers,
                 json=json_data,
-                timeout=8 # ফাস্ট রেসপন্সের জন্য টাইমআউট ৮ সেকেন্ড করা হলো
+                timeout=8
             )
 
-            # গ্যারেনার ডেটাবেজে প্লেয়ার পাওয়া গেলে সাকসেস ডেটা রিটার্ন করবে
-            if res.status_code == 200 and res.json().get('nickname'):
+            print("=" * 50, flush=True)
+            print(f"Region      : {r_code}", flush=True)
+            print(f"UID         : {target_id}", flush=True)
+            print(f"Status Code : {res.status_code}", flush=True)
+            print(f"Response    : {res.text}", flush=True)
+            print("=" * 50, flush=True)
+
+            if res.status_code == 200:
                 player_data = res.json()
-                nickname = player_data.get('nickname', 'N/A')
-                print(f"✅ Player found in region {r_code}! Nickname: {nickname}", flush=True)
-                
-                return {
-                    "nickname": nickname,
-                    "region_code": r_code,
-                    "region_name": SUPPORTED_REGIONS[r_code]
-                }
-                
+
+                if player_data.get("nickname"):
+                    return {
+                        "nickname": player_data["nickname"],
+                        "region_code": r_code,
+                        "region_name": SUPPORTED_REGIONS[r_code]
+                    }
+
+        except ValueError:
+            print("Response is not valid JSON.", flush=True)
+
         except requests.exceptions.RequestException as e:
-            print(f"⚠️ Error during request for region {r_code}: {str(e)}", flush=True)
-            # ইউজার নির্দিষ্ট রিজিওন চেয়ে থাকলে এবং এরর আসলে লুপ বন্ধ করবে
-            if requested_region:
-                return {"error": str(e)}
+            print(f"Request Error: {e}", flush=True)
 
     return {"error": "ID NOT FOUND IN SUPPORTED REGIONS"}
 
