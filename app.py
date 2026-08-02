@@ -47,8 +47,8 @@ def check_player_info(target_id, requested_region=None):
         headers = {
             'Accept-Language': 'en-US,en;q=0.9',
             'Connection': 'keep-alive',
-            'Origin': 'https://shop2game.com',
-            'Referer': 'https://shop2game.com/app/100067/idlogin',
+            'Origin': 'https://shop.garena.sg',
+            'Referer': 'https://shop.garena.sg/app/100067/idlogin',
             'User-Agent': 'Mozilla/5.0 (Linux; Android 11; Redmi Note 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36',
             'accept': 'application/json',
             'content-type': 'application/json',
@@ -66,7 +66,7 @@ def check_player_info(target_id, requested_region=None):
 
         try:
             res = requests.post(
-                'https://shop2game.com/api/auth/player_id_login',
+                'https://shop.garena.sg/api/auth/player_id_login',
                 cookies=cookies,
                 headers=headers,
                 json=json_data,
